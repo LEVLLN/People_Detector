@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\haarcascade_upperbody.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\haarcascade_upperbody.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\lbpcascade_frontalface1.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\lbpcascade_frontalface1.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\haarcascade_fullbody.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\haarcascade_fullbody.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\lbpcascade_frontalface.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\lbpcascade_frontalface.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\haarcascade_lowerbody.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\haarcascade_lowerbody.xml"
+    }
+]

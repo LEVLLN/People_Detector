@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "org.opencv.samples.facedetect"
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+//        ndk {
+//            moduleName "hello-jni"
+//        }
+
+     
+    }
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/jniLibs'
+        //sourceSets.main.jni.srcDirs = ['src/main/jniLibs']
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        buildType {
+            debuggable true
+            jniDebuggable true
+            zipAlignEnabled true
+        }
+    }
+}
+
+dependencies {
+    compile project(':openCVLibrary310')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+}
