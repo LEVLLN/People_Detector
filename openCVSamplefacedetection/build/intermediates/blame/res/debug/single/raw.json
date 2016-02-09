@@ -4,6 +4,10 @@
         "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\haarcascade_upperbody.xml"
     },
     {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\haarcascade_fullbody1.xml",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\haarcascade_fullbody1.xml"
+    },
+    {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\build\\intermediates\\res\\merged\\debug\\raw\\lbpcascade_frontalface1.xml",
         "source": "C:\\Users\\user\\AndroidStudioProjects\\face-detection\\openCVSamplefacedetection\\src\\main\\res\\raw\\lbpcascade_frontalface1.xml"
     },

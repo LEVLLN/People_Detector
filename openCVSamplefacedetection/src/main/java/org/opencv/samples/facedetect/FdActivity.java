@@ -2,10 +2,14 @@ package org.opencv.samples.facedetect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -14,6 +18,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -26,6 +31,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class FdActivity extends Activity implements CvCameraViewListener2 {
 
@@ -38,8 +47,10 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
     private MenuItem mItemFace40;
     private MenuItem mItemFace30;
     private MenuItem mItemFace20;
+    private MenuItem mSaveFace;
+    private MenuItem mFacesToFiles;
     private MenuItem mItemType;
-
+    private Rect finalFaceRect;
     private Mat mRgba;
     private Mat mGray;
     private File mFaceCascadeFile;
@@ -51,7 +62,8 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
     private int mDetectorType = JAVA_DETECTOR;
     private String[] mDetectorName;
-
+    private List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+    private Bitmap bitmap;
     private float mRelativeFaceSize = 0.2f;
     private int mAbsoluteFaceSize = 0;
 
@@ -111,7 +123,6 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
                         }
                         isFullBody.close();
                         os.close();
-
                         mFullBodyDetector = new CascadeClassifier(mFullBodyCascadeFile.getAbsolutePath());
                         if (mFullBodyDetector.empty()) {
                             Log.e(TAG, "Failed to load cascade classifier");
@@ -210,32 +221,47 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             mNativeDetector_body.setMinFaceSize(mAbsoluteFaceSize);
         }
 
-        MatOfRect faces = new MatOfRect();
+        final MatOfRect faces = new MatOfRect();
         MatOfRect fullBodyes = new MatOfRect();
 
         if (mDetectorType == JAVA_DETECTOR) {
             if (mFaceDetector != null)
                 mFaceDetector.detectMultiScale(mGray, faces, 1.1, 2, 2, // TODO: objdetect.CV_HAAR_SCALE_IMAGE
                         new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
-            if(mFullBodyDetector!=null)
-                mFullBodyDetector.detectMultiScale(mGray,fullBodyes,1.1,2,2,
-                new Size(mAbsoluteFaceSize,mAbsoluteFaceSize),new Size());
+            if (mFullBodyDetector != null)
+                mFullBodyDetector.detectMultiScale(mGray, fullBodyes, 1.1, 2, 2,
+                        new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
         } else if (mDetectorType == NATIVE_DETECTOR) {
-            if (mNativeDetector != null)
+            if (mNativeDetector != null) {
                 mNativeDetector.detect(mGray, faces);
-                mNativeDetector_body.detect(mGray,fullBodyes);
+                mNativeDetector_body.detect(mGray, fullBodyes);
+            }
         } else {
             Log.e(TAG, "Detection method is not selected!");
         }
 
-        Rect[] facesArray = faces.toArray();
+        final Rect[] facesArray = faces.toArray();
         Rect[] fullBodiesArray = fullBodyes.toArray();
-        for (Rect aFacesArray : facesArray) {
+        Rect faceRect = new Rect();
+        for (final Rect aFacesArray : facesArray) {
             Imgproc.rectangle(mRgba, aFacesArray.tl(), aFacesArray.br(), FACE_RECT_COLOR, 3);
+            faceRect = aFacesArray;
+
+
         }
         for (Rect aFullBodiesArray : fullBodiesArray) {
             Imgproc.rectangle(mRgba, aFullBodiesArray.tl(), aFullBodiesArray.br(), FACE_RECT_COLOR, 3);
         }
+
+
+        finalFaceRect = faceRect;
+        mOpenCvCameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
         return mRgba;
     }
 
@@ -246,6 +272,8 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
         mItemFace40 = menu.add("Face size 40%");
         mItemFace30 = menu.add("Face size 30%");
         mItemFace20 = menu.add("Face size 20%");
+        mSaveFace = menu.add("Remember Face");
+        mFacesToFiles = menu.add("Faces to Storage");
         mItemType = menu.add(mDetectorName[mDetectorType]);
         return true;
     }
@@ -265,6 +293,30 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             int tmpDetectorType = (mDetectorType + 1) % mDetectorName.length;
             item.setTitle(mDetectorName[tmpDetectorType]);
             setDetectorType(tmpDetectorType);
+        } else if (item == mSaveFace) {
+            Mat faceRecMat = mRgba.submat(finalFaceRect.y, finalFaceRect.y + finalFaceRect.height, finalFaceRect.x, finalFaceRect.x + finalFaceRect.width);
+            bitmap = Bitmap.createBitmap(faceRecMat.cols(), faceRecMat.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(faceRecMat, bitmap);
+            bitmapList.add(bitmap);
+        } else if (item == mFacesToFiles) {
+            try {
+                String path = Environment.getExternalStorageDirectory().toString();
+
+                for (Bitmap k : bitmapList) {
+                    OutputStream fOut = null;
+                    Random rnd = new Random();
+                    int number = rnd.nextInt(100 + 300);
+                    File file = new File(path, "Finded face" + number + ".png"); // the File to save to jpg
+                    fOut = new FileOutputStream(file);
+                    k.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    fOut.flush();
+                    fOut.close(); // do not forget to close the stream
+                    MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+                    Log.i("SAVED", "FACE " + number + " SAVED");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }

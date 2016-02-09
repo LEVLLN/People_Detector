@@ -1765,10 +1765,11 @@ containing a value of this type.
     }
     public static final class raw {
         public static final int haarcascade_fullbody=0x7f050000;
-        public static final int haarcascade_lowerbody=0x7f050001;
-        public static final int haarcascade_upperbody=0x7f050002;
-        public static final int lbpcascade_frontalface=0x7f050003;
-        public static final int lbpcascade_frontalface1=0x7f050004;
+        public static final int haarcascade_fullbody1=0x7f050001;
+        public static final int haarcascade_lowerbody=0x7f050002;
+        public static final int haarcascade_upperbody=0x7f050003;
+        public static final int lbpcascade_frontalface=0x7f050004;
+        public static final int lbpcascade_frontalface1=0x7f050005;
     }
     public static final class string {
         public static final int abc_action_bar_home_description=0x7f060000;
